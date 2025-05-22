@@ -1,48 +1,36 @@
 package com.arni.gameoflife;
 
-import java.util.Random;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class Board {
-    private int[][] matrix;
-    private final int rows;
-    private final int cols;
+    int[][] GLIDER = {
+            {1, 0}, {2, 1}, {0, 2}, {1, 2}, {2, 2}
+    };
+    private Set<Point> liveCells = new LinkedHashSet<>();
 
-    public Board(int rows,int cols){
-        this.rows=rows;
-        this.cols=cols;
-        this.matrix=new int[rows][cols];
-    }
+    public void initializeBoard(int centerX, int centerY) {
+        liveCells.clear();
 
-    public void initializeBoard() {
-        //Initialize 1s in the board array
-        Random random = new Random();
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                matrix[i][j] = random.nextInt(2); // 0 or 1
-            }
+        for (int[] offset : GLIDER) {
+            liveCells.add(new Point(centerX + offset[0], centerY + offset[1]));
         }
+        liveCells.forEach(System.out::println);
+
     }
 
-    public int[][] getMatrix(){
-        return matrix;
+    public Set<Point> getLiveCells() {
+        return liveCells;
     }
 
-    public void setMatrix(int[][] matrix){
-        this.matrix=matrix;
+    public void setLiveCells(Set<Point> liveCells) {
+        this.liveCells = liveCells;
     }
 
-    public int getRows(){
-        return rows;
-    }
-
-    public int getCols(){
-        return cols;
-    }
-
-    public void printBoard() {
-        for(int[] row: matrix){
-            for(int cell: row)
-                System.out.print(cell==1? "1 " : "0 ");
+    public void printBoard(int width, int height, int centerX, int centerY) {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++)
+                System.out.print(liveCells.contains(new Point(x + centerX, y + centerY)) ? "* " : ". ");
             System.out.println();
         }
         System.out.println();
